@@ -1,0 +1,53 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: ingress-route
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - ingressgateway
+  http:
+    - match:
+      - uri: 
+          exact: "/grafana"
+      redirect:
+        uri: "/grafana/"
+    - match:
+      - uri:
+          prefix: "/grafana/"
+      headers:
+        request:
+          set:
+            X-Forwarded-Prefix: "/grafana"
+      rewrite:
+        uri: "/"
+      route:
+        - destination:
+            host: grafana.default.svc.cluster.local
+    - match:
+      - uri:
+          exact: "/prometheus"
+      redirect:
+        uri: "/prometheus/"
+    - match:
+      - uri:
+          prefix: "/prometheus/"
+      rewrite:
+        uri: "/"
+      route:
+        - destination:
+            host: prometheus-server.default.svc.cluster.local
+    - match:
+      - uri:
+          exact: "/server"
+      redirect:
+        uri: "/server/"
+    - match:
+      - uri:
+          prefix: "/server/"
+      rewrite:
+        uri: "/"
+      route:
+        - destination:
+            host: synchronous.default.svc.cluster.local

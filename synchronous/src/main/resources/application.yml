@@ -1,0 +1,4 @@
+server:
+  tomcat:
+    max-keep-alive-requests: ${MAX_KEEP_ALIVE:-2}
+    keep-alive-timeout: ${KEEP_ALIVE_TIMEOUT:-20}

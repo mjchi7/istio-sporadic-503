@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  selector:
+    app: {{ .Chart.Name }}
+  ports:
+    # ports must be named in order for the access log to know that it's extracting http related info
+    # https://istio.io/latest/docs/ops/configuration/traffic-management/protocol-selection/
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: http

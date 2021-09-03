@@ -1,0 +1,6 @@
+# To limit storage consumption to 1GB
+server:
+  extraArgs:
+    storage.tsdb.retention.size: 1GB
+    web.external-url: /prometheus/
+    web.route-prefix: /

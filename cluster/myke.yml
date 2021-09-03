@@ -1,0 +1,38 @@
+project: cluster
+
+tasks:
+  start-cluster:
+    cmd: |
+      ./start-cluster.sh
+
+  deploy:
+    cmd: |
+      myke deploy-prometheus deploy-grafana
+
+  undeploy:
+    cmd: |
+      myke undeploy-grafana undeploy-prometheus
+
+  deploy-prometheus:
+    cmd: |
+      helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+      helm repo update
+      helm upgrade --install prometheus prometheus-community/prometheus --values prometheus-values.yaml
+
+  deploy-grafana:
+    cmd: |
+      helm repo add grafana https://grafana.github.io/helm-charts
+      helm repo update
+      helm upgrade --install grafana grafana/grafana --values grafana-values.yaml
+
+  undeploy-grafana:
+    cmd: |
+      helm delete grafana
+
+  undeploy-prometheus:
+    cmd: |
+      helm delete prometheus
+
+  grafana-get-password:
+    cmd: |
+      kubectl get secret --namespace default grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo

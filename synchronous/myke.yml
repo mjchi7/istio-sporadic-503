@@ -1,0 +1,22 @@
+project: synchronous
+
+tasks:
+  bake:
+    cmd: |
+      myke build-image synchronize-image
+
+  change:
+    cmd: |
+      myke bake deploy
+
+  build-image:
+    cmd: |
+      ./gradlew bootBuildImage --imageName synchronous:latest
+
+  synchronize-image:
+    cmd: |
+      k3d image import synchronous:latest
+
+  deploy:
+    cmd: |
+      helm upgrade --install synchronous ./charts --values ./charts/values.yaml

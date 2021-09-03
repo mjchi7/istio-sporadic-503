@@ -1,0 +1,19 @@
+project: istio
+
+tasks:
+  install:
+    cmd: |
+      istioctl install --set revision=main --set profile=default --set meshConfig.accessLogEncoding=JSON --set meshConfig.accessLogFile=//dev/stdout --set meshConfig.h2UpgradePolicy=DO_NOT_UPGRADE
+
+  deploy:
+    cmd: |
+      ls *.yaml | while read manifest; do echo "Deploying manifest $manifest"; kubectl apply -f $manifest; done;
+      myke enable-injection
+
+  undeploy:
+    cmd: |
+      ls *.yaml | while read manifest; do echo "Deleting manifest $manifest"; kubectl delete -f $manifest; done;
+
+  enable-injection:
+    cmd: |
+      kubectl label namespace default istio-injection- istio.io/rev=main --overwrite
